@@ -1,13 +1,16 @@
-import './App.css'
+import "./App.css";
+import Header from "./components/header/Header";
+import ShowImages from "./components/showImages/ShowImages";
+import Slider from "./components/slider/Slider";
 
 function App() {
-  
-
-  return (
-    <>
-     <h1 className='text-center bg-slate-200 p-2'>APP RODANDO</h1>
-    </>
-  )
+	return (
+		<>
+			<Header />
+			<Slider/>
+			<ShowImages/>
+		</>
+	);
 }
 
-export default App
+export default App;

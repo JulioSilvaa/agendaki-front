@@ -2,7 +2,7 @@ import React from "react";
 
 const CardImage = () => {
   return (
-    <div className="flex w-full flex-grow- flex-col place-items-center">
+    <div className="flex w-full flex-grow- flex-col place-items-center cursor-pointer">
       <div className="w-full max-w-[300px]">
         <img src="https://picsum.photos/300/250.webp?random=4" alt="" />
       </div>

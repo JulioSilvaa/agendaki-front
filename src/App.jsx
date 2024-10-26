@@ -1,16 +1,8 @@
+import { Outlet } from "react-router-dom";
 import "./App.css";
-import Header from "./components/header/Header";
-import ShowImages from "./components/showImages/ShowImages";
-import Slider from "./components/slider/Slider";
 
 function App() {
-	return (
-		<>
-			<Header />
-			<Slider/>
-			<ShowImages/>
-		</>
-	);
+  return <Outlet />;
 }
 
 export default App;

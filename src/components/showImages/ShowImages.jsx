@@ -1,6 +1,6 @@
-import React from "react";
-import CardImage from "./CardImage";
-import CardService from "../cardServices/CardService";
+import React from 'react';
+import CardImage from './CardImage';
+import CardService from '../cardServices/CardService';
 
 const ShowImages = () => {
   return (
@@ -23,9 +23,7 @@ const ShowImages = () => {
 
       {/* Coluna da direita */}
       <div className="flex flex-col items-center w-full md:w-1/5 gap-4   space-y-8">
-        <h3 className="pt-2 font-semibold text-2xl text-red-600 mt-14">
-          Anunciantes
-        </h3>
+        <h3 className="pt-2 font-semibold text-2xl text-red-600 mt-14">Anunciantes</h3>
         <div className="flex flex-col space-y-4 w-full mx-auto place-items-center ml-4 ">
           <CardService />
           <CardService />

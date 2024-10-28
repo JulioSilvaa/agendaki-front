@@ -35,6 +35,7 @@ const ShowImages = () => {
         <div className="flex flex-col space-y-4 w-full items-center">
           {serviceProviders?.map((service, id) => (
             <div
+              onClick={() => navigate(`/detalhes/${service.id}`)}
               key={id}
               className="w-full sm:max-w-[200px] md:max-w-[180px] h-[100px] flex flex-col items-center justify-center cursor-pointer overflow-hidden transition-transform transform hover:scale-105 hover:shadow-lg"
             >

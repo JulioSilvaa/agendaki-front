@@ -1,0 +1,123 @@
+
+  export const places = [
+    {
+      id: 1,
+      name: 'Praia do Sol',
+      city: 'Rio de Janeiro',
+      img: 'https://picsum.photos/300/250.webp?random=1',
+    },
+    {
+      id: 2,
+      name: 'Montanha Verde',
+      city: 'Belo Horizonte',
+      img: 'https://picsum.photos/300/250.webp?random=2',
+    },
+    {
+      id: 3,
+      name: 'Ilha Bela',
+      city: 'São Paulo',
+      img: 'https://picsum.photos/300/250.webp?random=3',
+    },
+    {
+      id: 4,
+      name: 'Parque Central',
+      city: 'Curitiba',
+      img: 'https://picsum.photos/300/250.webp?random=4',
+    },
+    {
+      id: 5,
+      name: 'Lago Azul',
+      city: 'Brasília',
+      img: 'https://picsum.photos/300/250.webp?random=5',
+    },
+    {
+      id: 6,
+      name: 'Serra Alta',
+      city: 'Fortaleza',
+      img: 'https://picsum.photos/300/250.webp?random=6',
+    },
+    {
+      id: 7,
+      name: 'Jardim Botânico',
+      city: 'Porto Alegre',
+      img: 'https://picsum.photos/300/250.webp?random=7',
+    },
+    {
+      id: 8,
+      name: 'Centro Histórico',
+      city: 'Recife',
+      img: 'https://picsum.photos/300/250.webp?random=8',
+    },
+    {
+      id: 9,
+      name: 'Museu de Arte',
+      city: 'Salvador',
+      img: 'https://picsum.photos/300/250.webp?random=9',
+    },
+    {
+      id: 10,
+      name: 'Vale Encantado',
+      city: 'Manaus',
+      img: 'https://picsum.photos/300/250.webp?random=10',
+    },
+    {
+      id: 11,
+      name: 'Museu de Arte',
+      city: 'Salvador',
+      img: 'https://picsum.photos/300/250.webp?random=9',
+    },
+    {
+      id: 12,
+      name: 'Vale Encantado',
+      city: 'Manaus',
+      img: 'https://picsum.photos/300/250.webp?random=10',
+    },
+    {
+      id: 13,
+      name: 'Museu de Arte',
+      city: 'Salvador',
+      img: 'https://picsum.photos/300/250.webp?random=9',
+    },
+    {
+      id: 14,
+      name: 'Vale Encantado',
+      city: 'Manaus',
+      img: 'https://picsum.photos/300/250.webp?random=10',
+    },
+    {
+      id: 15,
+      name: 'Museu de Arte',
+      city: 'Salvador',
+      img: 'https://picsum.photos/300/250.webp?random=9',
+    },
+    {
+      id: 16,
+      name: 'Vale Encantado',
+      city: 'Manaus',
+      img: 'https://picsum.photos/300/250.webp?random=10',
+    },
+    {
+      id: 17,
+      name: 'Vale Encantado',
+      city: 'Manaus',
+      img: 'https://picsum.photos/300/250.webp?random=10',
+    },
+    {
+      id: 18,
+      name: 'Vale Encantado',
+      city: 'Manaus',
+      img: 'https://picsum.photos/300/250.webp?random=10',
+    },
+    {
+      id: 19,
+      name: 'Vale Encantado',
+      city: 'Manaus',
+      img: 'https://picsum.photos/300/250.webp?random=10',
+    },
+    {
+      id: 20,
+      name: 'Vale Encantado',
+      city: 'Manaus',
+      img: 'https://picsum.photos/300/250.webp?random=10',
+    },
+  ];

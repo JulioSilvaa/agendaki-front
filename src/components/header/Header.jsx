@@ -20,7 +20,7 @@ const Header = () => {
           </li>
         </ul>
       </nav>
-      <div className=" flex flex-wrap w-full justify-center place-items-center gap-14 bg-blue-400 p-2">
+      <div className=" flex flex-wrap w-full justify-center place-items-center gap-8 bg-blue-400 p-2">
         <div className="">
           <img src="https://picsum.photos/400/200" alt="logo da Empresa" />
         </div>
@@ -35,7 +35,7 @@ const Header = () => {
                 id="busca"
                 name="busca"
                 placeholder="Ex: Area de lazer"
-                className="w-full px-4 py-2 rounded-md text-gray-700 outline-none"
+                className="  w-60 px-4 py-2 rounded-md text-gray-700 outline-none"
               />
             </label>
             <button

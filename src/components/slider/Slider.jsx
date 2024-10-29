@@ -39,7 +39,7 @@ const Slider = () => {
   }, [slides.length]);
 
   return (
-    <div className="flex flex-col items-center mx-auto w-full max-w-4xl overflow-hidden rounded-lg shadow-lg bg-slate-100 px-8 py-6 mt-8">
+    <div className=" flex flex-col items-center mx-auto w-full max-w-4xl overflow-hidden rounded-lg shadow-lg bg-slate-100 px-8 py-6 mt-8">
       {/* Título da Seção */}
       <h2 className=" pt-2 font-semibold text-2xl text-red-600 text-center mb-4">Destaques</h2>
 

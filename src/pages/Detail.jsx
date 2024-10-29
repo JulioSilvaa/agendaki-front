@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { places } from '../db';
+import Modal from '../components/modal/Modal';
 
 const Detail = () => {
   const [item, setItem] = useState({});
+  const [modalIsVisible, setModalIsVisible] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { id } = useParams();
 
   useEffect(() => {
@@ -22,6 +25,23 @@ const Detail = () => {
     } catch {
       return false;
     }
+  };
+
+  const openModal = (index) => {
+    setCurrentImageIndex(index);
+    setModalIsVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalIsVisible(false);
+  };
+
+  const nextImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % item.album.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + item.album.length) % item.album.length);
   };
 
   return (
@@ -81,7 +101,7 @@ const Detail = () => {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
+                    strokeWidth={4}
                     d="M5 13l4 4L19 7"
                   />
                 </svg>
@@ -97,14 +117,25 @@ const Detail = () => {
         <div className="flex justify-center flex-wrap">
           {item.album?.map((imgUrl, index) => (
             <img
+              onClick={() => openModal(index)}
               key={index}
               src={imgUrl}
               alt={`Foto ${index + 1}`}
-              className="m-2 rounded-md shadow-sm"
+              className="m-2 rounded-md shadow-sm cursor-pointer"
             />
           ))}
         </div>
       </div>
+
+      {/* Modal com Slides de Fotos */}
+      {modalIsVisible && (
+        <Modal
+          onclose={closeModal}
+          currentImage={item.album[currentImageIndex]}
+          nextImage={nextImage}
+          prevImage={prevImage}
+        />
+      )}
 
       {/* Localização */}
       <div className="bg-white p-4 rounded-lg shadow-md mb-4">

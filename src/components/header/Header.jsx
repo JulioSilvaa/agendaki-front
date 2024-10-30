@@ -21,8 +21,8 @@ const Header = () => {
         </ul>
       </nav>
       <div className=" flex flex-wrap w-full justify-center place-items-center gap-8 bg-blue-400 p-2">
-        <div className="">
-          <img src="https://picsum.photos/400/200" alt="logo da Empresa" />
+        <div className="max-w-[200px] rounded-full">
+          <img className="" src="logo.png" alt="logo da Empresa" />
         </div>
         <div className="flex justify-center p-4">
           <form

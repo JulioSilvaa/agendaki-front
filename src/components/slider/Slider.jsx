@@ -39,9 +39,9 @@ const Slider = () => {
   }, [slides.length]);
 
   return (
-    <div className=" flex flex-col items-center mx-auto w-full max-w-4xl overflow-hidden rounded-lg shadow-lg bg-slate-100 px-8 py-6 mt-8">
+    <div className="flex flex-col items-center mx-auto w-full max-w-4xl overflow-hidden rounded-lg shadow-lg bg-slate-100 px-4 py-6 mt-8">
       {/* Título da Seção */}
-      <h2 className=" pt-2 font-semibold text-2xl text-red-600 text-center mb-4">Destaques</h2>
+      <h2 className="pt-2 font-semibold text-2xl text-red-600 text-center mb-4">Destaques</h2>
 
       {/* Metade para a Imagem e Dados */}
       <div className="flex w-full flex-col md:flex-row">
@@ -67,17 +67,17 @@ const Slider = () => {
         </div>
 
         {/* Metade para os Dados */}
-        <div className="w-2/5 flex flex-col justify-center p-6">
+        <div className="w-full md:w-2/5 flex flex-col justify-center p-6">
           <h2 className="text-xl font-semibold text-gray-800 transition-opacity duration-1000 ease-in-out">
             {slides[currentIndex].title}
           </h2>
-          <p className={`text-gray-600 transition-opacity duration-1000 ease-in-out`}>
+          <p className="text-gray-600 transition-opacity duration-1000 ease-in-out">
             {slides[currentIndex].address}
           </p>
-          <p className={`text-gray-600 transition-opacity duration-1000 ease-in-out`}>
+          <p className="text-gray-600 transition-opacity duration-1000 ease-in-out">
             {slides[currentIndex].contact}
           </p>
-          <p className={`text-gray-600 transition-opacity duration-1000 ease-in-out`}>
+          <p className="text-gray-600 transition-opacity duration-1000 ease-in-out">
             {slides[currentIndex].email}
           </p>
         </div>

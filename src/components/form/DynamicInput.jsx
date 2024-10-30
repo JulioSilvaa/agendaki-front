@@ -22,7 +22,7 @@ const DynamicInput = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-4">
+    <div className="max-w-3xl mx-auto ">
       <h2 className="text-md font-semibold mt-6 mb-2 border-b border-gray-300">
         INFORMAÇÕES DE CONTATO
       </h2>
@@ -61,7 +61,7 @@ const DynamicInput = () => {
               value={contato.info}
               onChange={(e) => handleInputChange(index, e)}
               placeholder="Digite ou cole o Link aqui"
-              className="mt-1 block w-full border border-gray-300 rounded-md focus:border-red-500 focus:ring focus:ring-red-200 transition duration-150 ease-in-out h-10 placeholder:pl-2"
+              className="mt-1 pl-2 block w-full border border-gray-300 rounded-md focus:border-red-500 focus:ring focus:ring-red-200 transition duration-150 ease-in-out h-10 placeholder:pl-2"
             />
           </div>
         </div>

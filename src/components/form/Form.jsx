@@ -1,43 +1,45 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import MaskedInput from 'react-text-mask'; // Importando a biblioteca de máscara
 import DynamicInput from './DynamicInput';
+import { validationSchema } from '../../utils/registerValidation';
 
 const Form = () => {
-  const [files, setFiles] = useState([]);
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
 
-  const handleFileChange = (event) => {
-    const selectedFiles = Array.from(event.target.files);
-    if (selectedFiles.length + files.length > 8) {
-      alert('Você pode selecionar até 8 fotos.');
-      return;
-    }
-    setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
-  };
-
-  const handleRemoveFile = (fileToRemove) => {
-    setFiles(files.filter((file) => file !== fileToRemove));
+  const onSubmit = (data) => {
+    console.log(data);
   };
 
   return (
     <div className="max-w-3xl mx-auto p-4">
       <h1 className="text-lg font-semibold mb-4">Preencha o formulário abaixo para se cadastrar</h1>
 
-      <form action="">
-        {/* Seção Tipo Pessoa */}
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4">
           <label htmlFor="pessoa" className="block text-sm font-medium">
             Tipo Pessoa
           </label>
           <select
-            name="pessoa"
             id="pessoa"
+            {...register('pessoa')}
             className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10"
           >
+            <option value="">Selecione</option>
             <option value="fisica">Física</option>
             <option value="juridica">Jurídica</option>
           </select>
+          {errors.pessoa && <span className="text-red-500">{errors.pessoa.message}</span>}
         </div>
 
-        {/* Seção Nome e Avatar */}
         <div className="mb-4">
           <label htmlFor="nome" className="block text-sm font-medium">
             Nome
@@ -45,33 +47,55 @@ const Form = () => {
           <input
             type="text"
             id="nome"
-            name="nome"
+            {...register('nome')}
             className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
           />
+          {errors.nome && <span className="text-red-500">{errors.nome.message}</span>}
+
           <label htmlFor="avatar" className="block text-sm font-medium mt-2">
-            Foto do perfil
+            Avatar
           </label>
           <input
             type="file"
             id="avatar"
-            name="avatar"
-            className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out p-2 outline-none"
+            {...register('avatar')}
+            className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
           />
         </div>
 
-        {/* Seção Contato */}
-        <h2 className="text-md font-semibold mt-6 mb-2 border-b border-gray-300">CONTATO</h2>
         <div className="flex flex-wrap -mx-2 mb-4">
           <div className="flex-1 px-2 mb-2">
             <label htmlFor="cpf" className="block text-sm font-medium">
               CPF
             </label>
-            <input
-              type="text"
-              id="cpf"
+            <Controller
+              control={control}
               name="cpf"
-              className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
+              render={({ field }) => (
+                <MaskedInput
+                  {...field}
+                  mask={[
+                    /\d/,
+                    /\d/,
+                    /\d/,
+                    '.',
+                    /\d/,
+                    /\d/,
+                    /\d/,
+                    '.',
+                    /\d/,
+                    /\d/,
+                    /\d/,
+                    '-',
+                    /\d/,
+                    /\d/,
+                  ]}
+                  placeholder="000.000.000-00"
+                  className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
+                />
+              )}
             />
+            {errors.cpf && <span className="text-red-500">{errors.cpf.message}</span>}
           </div>
           <div className="flex-1 px-2 mb-2">
             <label htmlFor="email" className="block text-sm font-medium">
@@ -80,9 +104,10 @@ const Form = () => {
             <input
               type="email"
               id="email"
-              name="email"
+              {...register('email')}
               className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
             />
+            {errors.email && <span className="text-red-500">{errors.email.message}</span>}
           </div>
           <div className="flex-1 px-2 mb-2">
             <label htmlFor="senha" className="block text-sm font-medium">
@@ -91,73 +116,78 @@ const Form = () => {
             <input
               type="password"
               id="senha"
-              name="senha"
+              {...register('senha')}
               className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
             />
+            {errors.senha && <span className="text-red-500">{errors.senha.message}</span>}
           </div>
         </div>
 
-        {/* Seção Endereço */}
+        <h2 className="text-md font-semibold mt-6 mb-2 border-b border-gray-300">CONTATO</h2>
+        <div className="flex flex-wrap -mx-2 mb-4">
+          <div className="flex-1 px-2 mb-2">
+            <label htmlFor="nome-contato" className="block text-sm font-medium">
+              Nome Contato
+            </label>
+            <input
+              type="text"
+              id="nome-contato"
+              {...register('nome-contato')}
+              className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
+            />
+            {errors['nome-contato'] && (
+              <span className="text-red-500">{errors['nome-contato'].message}</span>
+            )}
+          </div>
+          <div className="flex-1 px-2 mb-2">
+            <label htmlFor="cargo" className="block text-sm font-medium">
+              Cargo
+            </label>
+            <input
+              type="text"
+              id="cargo"
+              {...register('cargo')}
+              className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
+            />
+            {errors.cargo && <span className="text-red-500">{errors.cargo.message}</span>}
+          </div>
+        </div>
+
         <h2 className="text-md font-semibold mt-6 mb-2 border-b border-gray-300">ENDEREÇO</h2>
         <div className="flex flex-wrap -mx-2 mb-4">
           <div className="flex-1 px-2 mb-2">
             <label htmlFor="cep" className="block text-sm font-medium">
               CEP
             </label>
-            <input
-              type="text"
-              id="cep"
+            <Controller
+              control={control}
               name="cep"
-              className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
+              render={({ field }) => (
+                <MaskedInput
+                  {...field}
+                  mask={[/\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
+                  placeholder="00000-000"
+                  className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
+                />
+              )}
             />
+            {errors.cep && <span className="text-red-500">{errors.cep.message}</span>}
           </div>
-          <div className="flex-2 px-2 mb-2">
+          <div className="flex-1 px-2 mb-2">
             <label htmlFor="endereco" className="block text-sm font-medium">
               Endereço
             </label>
             <input
               type="text"
               id="endereco"
-              name="endereco"
+              {...register('endereco')}
               className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
             />
-          </div>
-          <div className="flex-1 px-2 mb-2">
-            <label htmlFor="complemento" className="block text-sm font-medium">
-              Complemento
-            </label>
-            <input
-              type="text"
-              id="complemento"
-              name="complemento"
-              className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
-            />
+            {errors.endereco && <span className="text-red-500">{errors.endereco.message}</span>}
           </div>
         </div>
 
         <div className="flex flex-wrap -mx-2 mb-4">
-          <div className="flex-2 px-2 mb-2">
-            <label htmlFor="cidade" className="block text-sm font-medium">
-              Cidade
-            </label>
-            <input
-              type="text"
-              id="cidade"
-              name="cidade"
-              className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
-            />
-          </div>
-          <div className="flex-1 px-2 mb-2">
-            <label htmlFor="uf" className="block text-sm font-medium">
-              UF
-            </label>
-            <input
-              type="text"
-              id="uf"
-              name="uf"
-              className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
-            />
-          </div>
           <div className="flex-1 px-2 mb-2">
             <label htmlFor="bairro" className="block text-sm font-medium">
               Bairro
@@ -165,47 +195,45 @@ const Form = () => {
             <input
               type="text"
               id="bairro"
-              name="bairro"
+              {...register('bairro')}
               className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
             />
+            {errors.bairro && <span className="text-red-500">{errors.bairro.message}</span>}
+          </div>
+          <div className="flex-1 px-2 mb-2">
+            <label htmlFor="cidade" className="block text-sm font-medium">
+              Cidade
+            </label>
+            <input
+              type="text"
+              id="cidade"
+              {...register('cidade')}
+              className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
+            />
+            {errors.cidade && <span className="text-red-500">{errors.cidade.message}</span>}
+          </div>
+          <div className="flex-1 px-2 mb-2">
+            <label htmlFor="estado" className="block text-sm font-medium">
+              Estado
+            </label>
+            <input
+              type="text"
+              id="estado"
+              {...register('estado')}
+              className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
+            />
+            {errors.estado && <span className="text-red-500">{errors.estado.message}</span>}
           </div>
         </div>
 
-        {/* Seção Galeria de Imagens */}
-        <h2 className="text-md font-semibold mt-6 mb-2 border-b border-gray-300">
-          GALERIA DE IMAGENS
-        </h2>
-        <div className="mb-4">
-          <label className="block text-sm font-medium">Selecionar até 8 fotos:</label>
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleFileChange}
-            className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out p-2 outline-none"
-          />
-          <div className="flex flex-wrap mt-2">
-            {files.map((file, index) => (
-              <div key={index} className="relative w-24 h-24 m-2">
-                <img
-                  src={URL.createObjectURL(file)}
-                  alt={file.name}
-                  className="w-full h-full object-cover rounded-md"
-                />
-                <button
-                  type="button"
-                  onClick={() => handleRemoveFile(file)}
-                  className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
-                >
-                  &times;
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
+        <DynamicInput register={register} />
 
-        {/* Componente Dinâmico */}
-        <DynamicInput />
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white rounded-md h-10 transition duration-150 ease-in-out hover:bg-blue-600 focus:outline-none"
+        >
+          Enviar
+        </button>
       </form>
     </div>
   );

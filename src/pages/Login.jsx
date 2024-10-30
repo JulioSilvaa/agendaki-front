@@ -1,61 +1,81 @@
+import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import * as yup from 'yup';
+import { useForm } from 'react-hook-form';
+import { strongPassword } from '../utils/loginValidation';
+
+const schema = yup
+  .object()
+  .shape({
+    password: yup
+      .string()
+      .matches(strongPassword, 'Precisa ter no mínimo 6 caracteres')
+      .trim()
+      .required('Campo obrigatório'),
+    email: yup.string().email('E-mail inválido.').required('Campo obrigatório'),
+  })
+  .required();
 
 const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Aqui você pode adicionar a lógica para o login
-    console.log('Email:', email, 'Senha:', senha);
+  const sendDataForms = (data) => {
+    console.log('Dados do Formulário:', data);
+    alert(`Email: ${data.email}\nSenha: ${data.password}`);
   };
 
   return (
     <div className="max-w-3xl mx-auto p-4">
       <h1 className="text-lg font-semibold mb-4">Login</h1>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(sendDataForms)}>
         {/* Seção E-mail */}
         <div className="mb-4">
           <label htmlFor="email" className="block text-sm font-medium">
             E-mail
           </label>
           <input
+            {...register('email')}
             type="email"
             id="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
             className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
-            required
           />
+          {errors.email ? (
+            <span className="text-red-500">{errors.email.message}</span>
+          ) : (
+            <span className="text-gray-500">Insira um e-mail válido</span>
+          )}
         </div>
 
         {/* Seção Senha */}
         <div className="mb-4 relative">
-          <label htmlFor="senha" className="block text-sm font-medium">
+          <label htmlFor="password" className="block text-sm font-medium">
             Senha
           </label>
           <div className="flex items-center">
             <input
               type={passwordVisible ? 'text' : 'password'}
-              id="senha"
-              name="senha"
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
-              className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2  outline-none"
-              required
+              id="password"
+              {...register('password')}
+              className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
             />
             <button
               type="button"
               onClick={togglePasswordVisibility}
-              className="ml-[30px] z-10"
+              className="ml-2 z-10"
               aria-label="Toggle password visibility"
             >
               {passwordVisible ? (
@@ -65,6 +85,7 @@ const Login = () => {
               )}
             </button>
           </div>
+          {errors.password && <span className="text-red-500">{errors.password.message}</span>}
         </div>
 
         {/* Botão de Login */}

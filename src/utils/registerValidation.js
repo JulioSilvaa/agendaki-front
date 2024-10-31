@@ -20,5 +20,7 @@ export const validationSchema = Yup.object().shape({
   endereco: Yup.string().required("Endereço é obrigatório."),
   bairro: Yup.string().required("Bairro é obrigatório."),
   cidade: Yup.string().required("Cidade é obrigatória."),
-  estado: Yup.string().required("Estado é obrigatório."),
+  estado: Yup.string()
+    .required("Estado é obrigatório.")
+    .matches(/^[A-Z]{2}$/, "O estado deve ser composto por duas letras maiúsculas."),
 });

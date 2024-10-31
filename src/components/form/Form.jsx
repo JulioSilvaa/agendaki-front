@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import MaskedInput from 'react-text-mask'; // Importando a biblioteca de máscara
-import DynamicInput from './DynamicInput';
+import MaskedInput from 'react-text-mask';
 import { validationSchema } from '../../utils/registerValidation';
+import { HiUpload } from 'react-icons/hi';
 
 const Form = () => {
   const {
@@ -15,15 +15,53 @@ const Form = () => {
     resolver: yupResolver(validationSchema),
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const [images, setImages] = useState([]);
+  const [avatar, setAvatar] = useState(null);
+
+  const handleImageChange = (e) => handleFileSelection(e.target.files);
+  const handleDrop = (e) => {
+    e.preventDefault();
+    handleFileSelection(e.dataTransfer.files);
+  };
+
+  const handleFileSelection = (files) => {
+    const newFiles = Array.from(files);
+    if (newFiles.length + images.length > 8) {
+      alert('Você pode selecionar no máximo 8 imagens.');
+      return;
+    }
+    setImages((prev) => [...prev, ...newFiles]);
+  };
+
+  const removeImage = (index) => {
+    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+  };
+
+  const handleSelectAvatar = (e) => {
+    setAvatar(e.target.files[0]);
+  };
+
+  const onSubmitData = (data) => {
+    const formData = new FormData();
+
+    Object.entries(data).forEach(([key, value]) => formData.append(key, value));
+
+    images.forEach((image, index) => formData.append(`images[${index}]`, image));
+
+    if (avatar) {
+      formData.append('avatar', avatar);
+    }
+
+    const bodyToApi = { ...data, images, avatar };
+
+    console.log(bodyToApi);
   };
 
   return (
     <div className="max-w-3xl mx-auto p-4">
       <h1 className="text-lg font-semibold mb-4">Preencha o formulário abaixo para se cadastrar</h1>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmitData)}>
         <div className="mb-4">
           <label htmlFor="pessoa" className="block text-sm font-medium">
             Tipo Pessoa
@@ -58,11 +96,12 @@ const Form = () => {
           <input
             type="file"
             id="avatar"
+            accept="image/*"
             {...register('avatar')}
-            className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
+            onChange={handleSelectAvatar}
+            className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out p-2 outline-none"
           />
         </div>
-
         <div className="flex flex-wrap -mx-2 mb-4">
           <div className="flex-1 px-2 mb-2">
             <label htmlFor="cpf" className="block text-sm font-medium">
@@ -216,18 +255,115 @@ const Form = () => {
             <label htmlFor="estado" className="block text-sm font-medium">
               Estado
             </label>
-            <input
-              type="text"
-              id="estado"
-              {...register('estado')}
-              className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
+            <Controller
+              control={control}
+              name="estado"
+              render={({ field }) => (
+                <MaskedInput
+                  {...field}
+                  mask={[/[A-Z]/, /[A-Z]/]}
+                  placeholder="SP"
+                  className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
+                />
+              )}
             />
             {errors.estado && <span className="text-red-500">{errors.estado.message}</span>}
           </div>
         </div>
 
-        <DynamicInput register={register} />
+        {/* Contatos adicionais */}
+        <h2 className="text-md font-semibold mt-6 mb-2 border-b border-gray-300">
+          CONTATOS ADICIONAIS<span className="ml-2 text-sm">(opcional)</span>
+        </h2>
+        <div className="flex flex-wrap -mx-2 mb-4">
+          <div className="flex-1 px-2 mb-2">
+            <label htmlFor="whatsapp" className="block text-sm font-medium">
+              WhatsApp
+            </label>
+            <Controller
+              control={control}
+              name="whatsapp"
+              render={({ field }) => (
+                <MaskedInput
+                  {...field}
+                  mask={[
+                    '(',
+                    /[1-9]/,
+                    /\d/,
+                    ')',
+                    ' ',
+                    /\d/,
+                    /\d/,
+                    /\d/,
+                    /\d/,
+                    '-',
+                    /\d/,
+                    /\d/,
+                    /\d/,
+                    /\d/,
+                  ]}
+                  placeholder="(00) 0000-0000"
+                  className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
+                />
+              )}
+            />
+            {errors.whatsapp && <span className="text-red-500">{errors.whatsapp.message}</span>}
+          </div>
+          <div className="flex-1 px-2 mb-2">
+            <label htmlFor="instagram" className="block text-sm font-medium">
+              Instagram
+            </label>
+            <input
+              type="text"
+              id="instagram"
+              {...register('instagram')}
+              placeholder="@usuario"
+              className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
+            />
+            {errors.instagram && <span className="text-red-500">{errors.instagram.message}</span>}
+          </div>
+        </div>
+        {/* Seções de Imagens */}
+        <h2 className="text-md font-semibold mt-6 mb-2 border-b border-gray-300">IMAGENS</h2>
+        <div
+          className="border-2 border-dashed border-gray-300 rounded-md p-4 text-center mb-4"
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={handleDrop}
+        >
+          <input
+            type="file"
+            id="imagens"
+            accept="image/*"
+            multiple
+            onChange={handleImageChange}
+            className="hidden"
+          />
+          <label htmlFor="imagens" className="flex flex-col items-center cursor-pointer">
+            <HiUpload className="text-4xl text-gray-400 mb-2" />
+            <span className="text-gray-600">
+              Arraste e solte suas imagens aqui ou clique para selecionar
+            </span>
+            <span className="text-gray-600">No máximo 8 imagens do local</span>
+          </label>
+        </div>
 
+        <div className="flex flex-wrap gap-4 mb-4">
+          {images.map((image, index) => (
+            <div key={index} className="relative w-32 h-32">
+              <img
+                src={URL.createObjectURL(image)}
+                alt={`preview-${index}`}
+                className="w-full h-full object-cover rounded-md"
+              />
+              <button
+                onClick={() => removeImage(index)}
+                className="absolute top-1 right-1 bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center hover:bg-red-700"
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+        </div>
         <button
           type="submit"
           className="w-full bg-blue-500 text-white rounded-md h-10 transition duration-150 ease-in-out hover:bg-blue-600 focus:outline-none"

@@ -6,21 +6,61 @@ import { validationSchema } from '../../utils/registerValidation';
 import { HiUpload } from 'react-icons/hi';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import cep from 'cep-promise';
 
 const Form = () => {
   const [images, setImages] = useState([]);
   const [avatar, setAvatar] = useState(null);
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [loadingCep, setLoadingCep] = useState(false);
+  const [cepError, setCepError] = useState('');
+  const [isAddressEnabled, setIsAddressEnabled] = useState(false);
   const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
+
+  const handleCepBlur = async (e) => {
+    const cepValue = e.target.value.replace(/\D/g, '');
+
+    if (cepValue.length === 8) {
+      setLoadingCep(true);
+      setCepError('');
+
+      try {
+        const cepData = await cep(cepValue);
+        console.log(cepData);
+
+        setValue('endereco', cepData.street || '');
+        setValue('bairro', cepData.neighborhood || '');
+        setValue('cidade', cepData.city || '');
+        setValue('uf', cepData.state || '');
+
+        setIsAddressEnabled(true);
+      } catch (error) {
+        console.error('Erro ao buscar CEP:', error);
+        setCepError('CEP não encontrado ou inválido');
+
+        setValue('endereco', '');
+        setValue('bairro', '');
+        setValue('cidade', '');
+        setValue('uf', '');
+
+        setIsAddressEnabled(false);
+      } finally {
+        setLoadingCep(false);
+      }
+    } else {
+      setIsAddressEnabled(false);
+    }
+  };
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -81,7 +121,7 @@ const Form = () => {
 
   return (
     <div className="max-w-3xl mx-auto p-4">
-      <h1 className="text-lg font-semibold mb-4">Anuncie seu imóvel </h1>
+      <h1 className="text-2xl text-center font-semibold mb-4">Anuncie seu imóvel </h1>
 
       <form onSubmit={handleSubmit(onSubmitData)}>
         <div className="mb-4">
@@ -303,23 +343,35 @@ const Form = () => {
           ENDEREÇO DO IMÓVEL
         </h2>
         <div className="flex flex-wrap -mx-2 mb-4">
-          <div className="flex-1 px-2 mb-2">
+          <div className=" w-[120px] px-2 mb-2">
             <label htmlFor="cep" className="block text-sm font-medium">
               CEP
             </label>
-            <Controller
-              control={control}
-              name="cep"
-              render={({ field }) => (
-                <MaskedInput
-                  {...field}
-                  mask={[/\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
-                  placeholder="00000-000"
-                  className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
-                />
+            <div className="relative">
+              <Controller
+                control={control}
+                name="cep"
+                render={({ field }) => (
+                  <MaskedInput
+                    {...field}
+                    mask={[/\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
+                    placeholder="00000-000"
+                    onBlur={(e) => {
+                      field.onBlur();
+                      handleCepBlur(e);
+                    }}
+                    className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
+                  />
+                )}
+              />
+              {loadingCep && (
+                <span className="text-sm text-blue-500 mt-1 block">Buscando CEP...</span>
               )}
-            />
-            {errors.cep && <span className="text-red-500">{errors.cep.message}</span>}
+              {cepError && <span className="text-sm text-red-500 mt-1 block">{cepError}</span>}
+              {errors.cep && (
+                <span className="text-sm text-red-500 mt-1 block">{errors.cep.message}</span>
+              )}
+            </div>
           </div>
           <div className="flex-1 px-2 mb-2">
             <label htmlFor="endereco" className="block text-sm font-medium">
@@ -329,9 +381,27 @@ const Form = () => {
               type="text"
               id="endereco"
               {...register('endereco')}
+              disabled={!isAddressEnabled}
               className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
             />
-            {errors.endereco && <span className="text-red-500">{errors.endereco.message}</span>}
+            {errors.endereco && (
+              <span className="text-sm text-red-500 mt-1 block">{errors.endereco.message}</span>
+            )}
+          </div>
+          <div className="flex-1/2 px-2 mb-2">
+            <label htmlFor="complemento" className="block text-sm font-medium">
+              Complemento
+            </label>
+            <input
+              type="text"
+              id="complemento"
+              {...register('complemento')}
+              disabled={!isAddressEnabled}
+              className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
+            />
+            {errors.complemento && (
+              <span className="text-sm text-red-500 mt-1 block">{errors.complemento.message}</span>
+            )}
           </div>
         </div>
 
@@ -344,9 +414,12 @@ const Form = () => {
               type="text"
               id="bairro"
               {...register('bairro')}
+              disabled={!isAddressEnabled}
               className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
             />
-            {errors.bairro && <span className="text-red-500">{errors.bairro.message}</span>}
+            {errors.bairro && (
+              <span className="text-sm text-red-500 mt-1 block">{errors.bairro.message}</span>
+            )}
           </div>
           <div className="flex-1 px-2 mb-2">
             <label htmlFor="cidade" className="block text-sm font-medium">
@@ -356,9 +429,12 @@ const Form = () => {
               type="text"
               id="cidade"
               {...register('cidade')}
+              disabled={!isAddressEnabled}
               className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
             />
-            {errors.cidade && <span className="text-red-500">{errors.cidade.message}</span>}
+            {errors.cidade && (
+              <span className="text-sm text-red-500 mt-1 block">{errors.cidade.message}</span>
+            )}
           </div>
           <div className="flex-1 max-w-20 px-2 mb-2">
             <label htmlFor="uf" className="block text-sm font-medium">
@@ -372,11 +448,14 @@ const Form = () => {
                   {...field}
                   mask={[/[A-Z]/, /[A-Z]/]}
                   placeholder="SP"
+                  disabled={!isAddressEnabled}
                   className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
                 />
               )}
             />
-            {errors.uf && <span className="text-sm text-red-500">{errors.uf.message}</span>}
+            {errors.uf && (
+              <span className="text-sm text-red-500 mt-1 block">{errors.uf.message}</span>
+            )}
           </div>
         </div>
 

@@ -24,4 +24,6 @@ export const validationSchema = Yup.object().shape({
   uf: Yup.string()
     .required("Estado é obrigatório.")
     .matches(/^[A-Za-z]{2}$/, "O estado deve ser composto por duas letras."),
+  diferenciais: Yup.string().required("Estado é obrigatório."),
+  descricao:Yup.string().required("Estado é obrigatório.")
 });

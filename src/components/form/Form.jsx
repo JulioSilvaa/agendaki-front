@@ -5,8 +5,14 @@ import MaskedInput from 'react-text-mask';
 import { validationSchema } from '../../utils/registerValidation';
 import { HiUpload } from 'react-icons/hi';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const Form = () => {
+  const [images, setImages] = useState([]);
+  const [avatar, setAvatar] = useState(null);
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -15,10 +21,6 @@ const Form = () => {
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
-
-  const [images, setImages] = useState([]);
-  const [avatar, setAvatar] = useState(null);
-  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -48,19 +50,33 @@ const Form = () => {
   };
 
   const onSubmitData = (data) => {
+    const fieldsToClean = ['telefone', 'cpf', 'cep', 'whatsapp'];
+
+    fieldsToClean.forEach((field) => {
+      if (data[field]) {
+        data[field] = data[field].replace(/\D/g, '');
+      }
+    });
+
     const formData = new FormData();
 
     Object.entries(data).forEach(([key, value]) => formData.append(key, value));
 
     images.forEach((image, index) => formData.append(`images[${index}]`, image));
 
+    const diferenciaisToArray = data.diferenciais.split(',').map((item) => item.trim());
+
     if (avatar) {
       formData.append('avatar', avatar);
     }
 
-    const bodyToApi = { ...data, images, avatar };
+    const bodyToApi = { ...data, images, avatar, diferenciais: diferenciaisToArray };
 
     console.log(bodyToApi);
+
+    // navigate('/');
+
+    //TODO navegação para pagamento
   };
 
   return (
@@ -344,7 +360,7 @@ const Form = () => {
             />
             {errors.cidade && <span className="text-red-500">{errors.cidade.message}</span>}
           </div>
-          <div className="flex-1 max-w-14 px-2 mb-2">
+          <div className="flex-1 max-w-20 px-2 mb-2">
             <label htmlFor="uf" className="block text-sm font-medium">
               UF
             </label>
@@ -360,7 +376,41 @@ const Form = () => {
                 />
               )}
             />
-            {errors.uf && <span className="text-red-500">{errors.uf.message}</span>}
+            {errors.uf && <span className="text-sm text-red-500">{errors.uf.message}</span>}
+          </div>
+        </div>
+
+        <h2 className="text-md font-semibold mt-6 mb-2 border-b border-gray-300">
+          DESCRIÇÃO O LOCAL
+        </h2>
+        <div className="flex flex-wrap -mx-2 mb-4">
+          <div className="w-full px-2 mb-2">
+            <label htmlFor="descricao" className="block text-sm font-medium">
+              Descrição do local
+            </label>
+            <textarea
+              id="descricao"
+              {...register('descricao')}
+              className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-24 p-2 outline-none"
+              placeholder="A área de lazer X é um espaço projetado para proporcionar momentos de relaxamento e de diversão."
+            />
+            {errors.descricao && <span className="text-red-500">{errors.descricao.message}</span>}
+          </div>
+
+          <div className="flex-1 px-2 mb-2">
+            <label htmlFor="diferenciais" className="block text-sm font-medium">
+              Diferenciais
+            </label>
+            <input
+              type="text"
+              id="diferenciais"
+              {...register('diferenciais')}
+              className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
+              placeholder="Ex: bilhar, piscina, churrasqueira, fogão a lenha, chuveirão"
+            />
+            {errors.diferenciais && (
+              <span className="text-red-500">{errors.diferenciais.message}</span>
+            )}
           </div>
         </div>
 

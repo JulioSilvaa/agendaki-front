@@ -4,23 +4,37 @@ import { Link } from 'react-router-dom';
 const Header = () => {
   return (
     <header className="w-full mx-auto">
-      <nav className="w-full  text-center">
-        <ul className="flex flex-wrap w-full mx-auto p-2 text-center gap-4 justify-center items-center">
-          <li className="menu-item">
-            <Link to={'/'}>HOME</Link>
+      <nav className="w-full text-center">
+        <ul className="flex flex-wrap w-full mx-auto p-5 text-center gap-4 justify-center items-center">
+          <li className="flex">
+            <Link to={'/'} className="block py-2 px-4 hover:bg-gray-200">
+              HOME
+            </Link>
           </li>
-          <li className="menu-item">QUEM SOMOS</li>
-          <li className="menu-item">SERVIÇOS</li>
-          <li className="menu-item">CONTATO</li>
-          <li className="menu-item">
-            <Link to={'/login'}>ÁREA DO CLIENTE</Link>
+          <li className="flex">
+            <span className="block py-2 px-4 hover:bg-gray-200">QUEM SOMOS</span>
           </li>
-          <li className="ml-8 px-4 py-2 bg-yellow-500 text-black font-bold rounded-lg animate-pulse transition-colors duration-300 cursor-pointer">
-            <Link to={'/Register'}>ANUNCIE AQUI</Link>
+          <li className="flex">
+            <span className="block py-2 px-4 hover:bg-gray-200">SERVIÇOS</span>
+          </li>
+          <li className="flex">
+            <span className="block py-2 px-4 hover:bg-gray-200">CONTATO</span>
+          </li>
+          <li className="">
+            <Link to={'/login'} className="block py-2 px-4 hover:bg-gray-200">
+              <span className="flex ">ÁREA DO CLIENTE</span>
+            </Link>
+          </li>
+          <li className="">
+            <Link to={'/register'}>
+              <span className=" divide-yellow-500 ml-8 px-4 py-3 bg-yellow-500 text-black font-bold rounded-lg animate-pulse transition-colors duration-300 cursor-pointer">
+                ANUNCIE AQUI
+              </span>
+            </Link>
           </li>
         </ul>
       </nav>
-      <div className=" flex flex-wrap w-full justify-center place-items-center gap-8 bg-blue-400 p-2">
+      <div className="flex flex-wrap w-full justify-center place-items-center gap-8 bg-blue-400 p-2">
         <div className="max-w-[200px] rounded-full">
           <img className="" src="logo.png" alt="logo da Empresa" />
         </div>
@@ -35,7 +49,7 @@ const Header = () => {
                 id="busca"
                 name="busca"
                 placeholder="Ex: Area de lazer"
-                className="  w-60 px-4 py-2 rounded-md text-gray-700 outline-none"
+                className="w-60 px-4 py-2 rounded-md text-gray-700 outline-none"
               />
             </label>
             <button

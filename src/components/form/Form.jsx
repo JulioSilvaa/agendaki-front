@@ -4,6 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import MaskedInput from 'react-text-mask';
 import { validationSchema } from '../../utils/registerValidation';
 import { HiUpload } from 'react-icons/hi';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const Form = () => {
   const {
@@ -17,6 +18,11 @@ const Form = () => {
 
   const [images, setImages] = useState([]);
   const [avatar, setAvatar] = useState(null);
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
 
   const handleImageChange = (e) => handleFileSelection(e.target.files);
   const handleDrop = (e) => {
@@ -59,28 +65,12 @@ const Form = () => {
 
   return (
     <div className="max-w-3xl mx-auto p-4">
-      <h1 className="text-lg font-semibold mb-4">Preencha o formulário abaixo para se cadastrar</h1>
+      <h1 className="text-lg font-semibold mb-4">Anuncie seu imóvel </h1>
 
       <form onSubmit={handleSubmit(onSubmitData)}>
         <div className="mb-4">
-          <label htmlFor="pessoa" className="block text-sm font-medium">
-            Tipo Pessoa
-          </label>
-          <select
-            id="pessoa"
-            {...register('pessoa')}
-            className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10"
-          >
-            <option value="">Selecione</option>
-            <option value="fisica">Física</option>
-            <option value="juridica">Jurídica</option>
-          </select>
-          {errors.pessoa && <span className="text-red-500">{errors.pessoa.message}</span>}
-        </div>
-
-        <div className="mb-4">
           <label htmlFor="nome" className="block text-sm font-medium">
-            Nome
+            NOME DO ANUNCIANTE
           </label>
           <input
             type="text"
@@ -91,7 +81,7 @@ const Form = () => {
           {errors.nome && <span className="text-red-500">{errors.nome.message}</span>}
 
           <label htmlFor="avatar" className="block text-sm font-medium mt-2">
-            Avatar
+            Foto do perfil <span className="text-sm">(opcional)</span>
           </label>
           <input
             type="file"
@@ -148,17 +138,31 @@ const Form = () => {
             />
             {errors.email && <span className="text-red-500">{errors.email.message}</span>}
           </div>
-          <div className="flex-1 px-2 mb-2">
-            <label htmlFor="senha" className="block text-sm font-medium">
+          <div className="flex-1/2 px-2 mb-2 relative">
+            <label htmlFor="password" className="block text-sm font-medium">
               Senha
             </label>
-            <input
-              type="password"
-              id="senha"
-              {...register('senha')}
-              className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
-            />
-            {errors.senha && <span className="text-red-500">{errors.senha.message}</span>}
+            <div className="relative">
+              <input
+                type={passwordVisible ? 'text' : 'password'}
+                id="password"
+                {...register('password')}
+                className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none pr-10"
+              />
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10"
+                aria-label="Toggle password visibility"
+              >
+                {passwordVisible ? (
+                  <FaEyeSlash className="h-5 w-5 text-gray-500" />
+                ) : (
+                  <FaEye className="h-5 w-5 text-gray-500" />
+                )}
+              </button>
+            </div>
+            {errors.password && <span className="text-red-500">{errors.password.message}</span>}
           </div>
         </div>
 
@@ -178,21 +182,110 @@ const Form = () => {
               <span className="text-red-500">{errors['nome-contato'].message}</span>
             )}
           </div>
+          <div className="flex-1/2 px-2 mb-2">
+            <label htmlFor="telefone" className="block text-sm font-medium">
+              Telefone
+            </label>
+            <Controller
+              control={control}
+              name="telefone"
+              render={({ field }) => (
+                <MaskedInput
+                  {...field}
+                  mask={[
+                    '(',
+                    /[1-9]/,
+                    /\d/,
+                    ')',
+                    ' ',
+                    /\d/,
+                    /\d/,
+                    /\d/,
+                    /\d/,
+                    '-',
+                    /\d/,
+                    /\d/,
+                    /\d/,
+                    /\d/,
+                  ]}
+                  placeholder="(00) 0000-0000"
+                  className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
+                />
+              )}
+            />
+            {errors.telefone && <span className="text-red-500">{errors.telefone.message}</span>}
+          </div>
+        </div>
+        {/* Contatos adicionais */}
+        <h2 className="text-md font-semibold mt-6 mb-2 border-b border-gray-300">
+          CONTATOS ADICIONAIS<span className="ml-2 text-sm">(opcional)</span>
+        </h2>
+        <div className="flex flex-wrap -mx-2 mb-4">
           <div className="flex-1 px-2 mb-2">
-            <label htmlFor="cargo" className="block text-sm font-medium">
-              Cargo
+            <label htmlFor="whatsapp" className="block text-sm font-medium">
+              WhatsApp
+            </label>
+            <Controller
+              control={control}
+              name="whatsapp"
+              render={({ field }) => (
+                <MaskedInput
+                  {...field}
+                  mask={[
+                    '(',
+                    /[1-9]/,
+                    /\d/,
+                    ')',
+                    ' ',
+                    /\d/,
+                    /\d/,
+                    /\d/,
+                    /\d/,
+                    '-',
+                    /\d/,
+                    /\d/,
+                    /\d/,
+                    /\d/,
+                  ]}
+                  placeholder="(00) 0000-0000"
+                  className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
+                />
+              )}
+            />
+            {errors.whatsapp && <span className="text-red-500">{errors.whatsapp.message}</span>}
+          </div>
+
+          <div className="flex-1 px-2 mb-2">
+            <label htmlFor="instagram" className="block text-sm font-medium">
+              Instagram
             </label>
             <input
               type="text"
-              id="cargo"
-              {...register('cargo')}
+              id="instagram"
+              {...register('instagram')}
+              placeholder="@usuario"
               className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
             />
-            {errors.cargo && <span className="text-red-500">{errors.cargo.message}</span>}
+            {errors.instagram && <span className="text-red-500">{errors.instagram.message}</span>}
+          </div>
+          <div className="flex-1 px-2 mb-2">
+            <label htmlFor="facebook" className="block text-sm font-medium">
+              Facebook
+            </label>
+            <input
+              type="text"
+              id="facebook"
+              {...register('facebook')}
+              placeholder="@facebook"
+              className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
+            />
+            {errors.facebook && <span className="text-red-500">{errors.facebook.message}</span>}
           </div>
         </div>
 
-        <h2 className="text-md font-semibold mt-6 mb-2 border-b border-gray-300">ENDEREÇO</h2>
+        <h2 className="text-md font-semibold mt-6 mb-2 border-b border-gray-300">
+          ENDEREÇO DO IMÓVEL
+        </h2>
         <div className="flex flex-wrap -mx-2 mb-4">
           <div className="flex-1 px-2 mb-2">
             <label htmlFor="cep" className="block text-sm font-medium">
@@ -251,13 +344,13 @@ const Form = () => {
             />
             {errors.cidade && <span className="text-red-500">{errors.cidade.message}</span>}
           </div>
-          <div className="flex-1 px-2 mb-2">
-            <label htmlFor="estado" className="block text-sm font-medium">
-              Estado
+          <div className="flex-1 max-w-14 px-2 mb-2">
+            <label htmlFor="uf" className="block text-sm font-medium">
+              UF
             </label>
             <Controller
               control={control}
-              name="estado"
+              name="uf"
               render={({ field }) => (
                 <MaskedInput
                   {...field}
@@ -267,62 +360,10 @@ const Form = () => {
                 />
               )}
             />
-            {errors.estado && <span className="text-red-500">{errors.estado.message}</span>}
+            {errors.uf && <span className="text-red-500">{errors.uf.message}</span>}
           </div>
         </div>
 
-        {/* Contatos adicionais */}
-        <h2 className="text-md font-semibold mt-6 mb-2 border-b border-gray-300">
-          CONTATOS ADICIONAIS<span className="ml-2 text-sm">(opcional)</span>
-        </h2>
-        <div className="flex flex-wrap -mx-2 mb-4">
-          <div className="flex-1 px-2 mb-2">
-            <label htmlFor="whatsapp" className="block text-sm font-medium">
-              WhatsApp
-            </label>
-            <Controller
-              control={control}
-              name="whatsapp"
-              render={({ field }) => (
-                <MaskedInput
-                  {...field}
-                  mask={[
-                    '(',
-                    /[1-9]/,
-                    /\d/,
-                    ')',
-                    ' ',
-                    /\d/,
-                    /\d/,
-                    /\d/,
-                    /\d/,
-                    '-',
-                    /\d/,
-                    /\d/,
-                    /\d/,
-                    /\d/,
-                  ]}
-                  placeholder="(00) 0000-0000"
-                  className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
-                />
-              )}
-            />
-            {errors.whatsapp && <span className="text-red-500">{errors.whatsapp.message}</span>}
-          </div>
-          <div className="flex-1 px-2 mb-2">
-            <label htmlFor="instagram" className="block text-sm font-medium">
-              Instagram
-            </label>
-            <input
-              type="text"
-              id="instagram"
-              {...register('instagram')}
-              placeholder="@usuario"
-              className="mt-1 block w-full border border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-150 ease-in-out h-10 p-2 outline-none"
-            />
-            {errors.instagram && <span className="text-red-500">{errors.instagram.message}</span>}
-          </div>
-        </div>
         {/* Seções de Imagens */}
         <h2 className="text-md font-semibold mt-6 mb-2 border-b border-gray-300">IMAGENS</h2>
         <div

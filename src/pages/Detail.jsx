@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { places } from '../db';
 import Modal from '../components/modal/Modal';
 
@@ -7,24 +8,50 @@ const Detail = () => {
   const [item, setItem] = useState({});
   const [modalIsVisible, setModalIsVisible] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [location, setLocation] = useState(null);
   const { id } = useParams();
+  console.log(location);
 
   useEffect(() => {
     const customerDetails = places.find((place) => place.id === id);
     if (customerDetails) {
       setItem(customerDetails);
+      fetchLocation(customerDetails.cep);
     } else {
       console.log('Detalhes não encontrados para o ID:', id);
     }
   }, [id]);
 
-  const isValidUrl = (url) => {
+  const fetchLocation = async (cepCode) => {
     try {
-      new URL(url);
-      return true;
-    } catch {
-      return false;
+      const cepData = await cep(cepCode);
+      const coordinates = await getCoordinates(cepData);
+      setLocation(coordinates);
+    } catch (error) {
+      console.error('Erro ao buscar o endereço:', error);
+      setLocation(null);
     }
+  };
+
+  const getCoordinates = async ({ street, neighborhood, city, state }) => {
+    const address = `${street}, ${neighborhood}, ${city}, ${state}, Brazil`;
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+          address,
+        )}&format=json&limit=1`,
+      );
+      const data = await response.json();
+      if (data.length > 0) {
+        return {
+          latitude: parseFloat(data[0].lat),
+          longitude: parseFloat(data[0].lon),
+        };
+      }
+    } catch (error) {
+      console.error('Erro ao buscar coordenadas:', error);
+    }
+    throw new Error('Dados insuficientes para obter coordenadas');
   };
 
   const openModal = (index) => {
@@ -76,6 +103,15 @@ const Detail = () => {
           <p>Instagram: {item.advertiser?.socialMedia?.instagram}</p>
           <p>Facebook: {item.advertiser?.socialMedia?.facebook}</p>
         </div>
+      </div>
+
+      {/* Endereço */}
+      <div className="bg-white p-4 rounded-lg shadow-md mb-4">
+        <h3 className="text-lg font-semibold">Endereço</h3>
+        <p>Cidade: {item.city}</p>
+        <p>
+          Endereço: {item.address} - {item.neighborhood}
+        </p>
       </div>
 
       {/* Descrição */}
@@ -140,16 +176,22 @@ const Detail = () => {
       {/* Localização */}
       <div className="bg-white p-4 rounded-lg shadow-md mb-4">
         <h3 className="text-lg font-semibold">Localização</h3>
-        {isValidUrl(item.iframe) ? (
-          <iframe
-            title="Localização"
-            src={item.iframe}
-            className="w-full h-64 sm:h-80 md:h-96 lg:h-112 border-none"
-            allowFullScreen=""
-            loading="lazy"
-          />
+        {location ? (
+          <MapContainer
+            center={[location.latitude, location.longitude]}
+            zoom={50}
+            style={{ height: '400px', width: '100%' }}
+          >
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            />
+            <Marker position={[location.latitude, location.longitude]}>
+              <Popup>Localização aqui!</Popup>
+            </Marker>
+          </MapContainer>
         ) : (
-          <p>Localização não disponível ou URL inválida.</p>
+          <p>Localização não disponível.</p>
         )}
       </div>
 

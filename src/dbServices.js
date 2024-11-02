@@ -2,11 +2,12 @@ export const serviceProviders = [
   {
     "id": "1",
     "name": "Festa na Floresta",
-    "city": "Curitiba",
+    "city": "são carlos",
     "serviceType": "Buffet Infantil",
-    "address": "Rua das Árvores, 123",
-    "neighborhood": "Jardim Botânico",
-    "cep": "80000-000",
+    "address": "Avenida Otto werner Rosel, 1111",
+    "neighborhood": "Jardim Ipanema",
+    "state":"sp",
+    "cep": "13563-673",
     "img": "https://picsum.photos/300/250.webp?random=15",
     "description": "Buffet temático com decoração de floresta encantada.",
     "album": [

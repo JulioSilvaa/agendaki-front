@@ -36,7 +36,6 @@ const Form = () => {
 
       try {
         const cepData = await cep(cepValue);
-        console.log(cepData);
 
         setValue('endereco', cepData.street || '');
         setValue('bairro', cepData.neighborhood || '');
@@ -45,7 +44,6 @@ const Form = () => {
 
         setIsAddressEnabled(true);
       } catch (error) {
-        console.error('Erro ao buscar CEP:', error);
         setCepError('CEP não encontrado ou inválido');
 
         setValue('endereco', '');

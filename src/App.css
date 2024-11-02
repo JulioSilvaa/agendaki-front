@@ -1,3 +1,4 @@
+@import url('https://unpkg.com/leaflet/dist/leaflet.css');
 .menu-item {
 	padding: 8px 16px;
 	background-color: white;

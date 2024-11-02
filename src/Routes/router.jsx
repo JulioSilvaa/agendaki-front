@@ -6,6 +6,8 @@ import Detail from '@pages/Detail';
 import Login from '@pages/Login';
 import Register from '@pages/Register';
 import Home from '@pages/Home';
+import Services from '@pages/services';
+import DetailServices from '../pages/DetailServices';
 
 export const Router = createBrowserRouter([
   {
@@ -26,8 +28,16 @@ export const Router = createBrowserRouter([
         element: <Login />,
       },
       {
+        path: '/servicos',
+        element: <Services />,
+      },
+      {
         path: '/register',
         element: <Register />,
+      },
+      {
+        path: '/detalheservico/:id',
+        element: <DetailServices />,
       },
       {
         path: '*',

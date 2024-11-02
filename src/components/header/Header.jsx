@@ -15,7 +15,9 @@ const Header = () => {
             <span className="block py-2 px-4 hover:bg-gray-200">QUEM SOMOS</span>
           </li>
           <li className="flex">
-            <span className="block py-2 px-4 hover:bg-gray-200">SERVIÇOS</span>
+            <Link to={'/servicos'}>
+              <span className="block py-2 px-4 hover:bg-gray-200">SERVIÇOS</span>
+            </Link>
           </li>
           <li className="flex">
             <span className="block py-2 px-4 hover:bg-gray-200">CONTATO</span>

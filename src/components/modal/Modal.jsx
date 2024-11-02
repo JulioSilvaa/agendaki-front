@@ -1,9 +1,11 @@
 import React from 'react';
 
-const Modal = ({ id = 'modal', onclose = () => {}, currentImage, nextImage, prevImage }) => {
+const Modal = ({ id = 'modal', onclose, currentImage, nextImage, prevImage }) => {
   const handleCloseModal = (e) => {
     if (e.target.id === id) onclose();
   };
+
+  if (!currentImage) return null; // Evitar renderizar se currentImage for inválido
 
   return (
     <div
@@ -14,7 +16,7 @@ const Modal = ({ id = 'modal', onclose = () => {}, currentImage, nextImage, prev
       <div className="bg-white rounded-lg shadow-lg w-11/12 max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl p-5 relative">
         <button
           onClick={onclose}
-          className="absolute top-2  text-5xl text-red-900 font-semibold focus:outline-none rounded-full"
+          className="absolute top-2 text-5xl text-red-900 font-semibold focus:outline-none rounded-full"
           style={{ width: '50px', height: '50px', zIndex: 10 }}
         >
           &times;

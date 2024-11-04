@@ -10,7 +10,6 @@ const Detail = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [location, setLocation] = useState(null);
   const { id } = useParams();
-  console.log(location);
 
   useEffect(() => {
     const customerDetails = places.find((place) => place.id === id);
@@ -73,9 +72,8 @@ const Detail = () => {
 
   return (
     <div className="container mx-auto p-6 bg-gray-50 rounded-lg shadow-lg">
-      <h1 className="text-4xl font-bold text-center text-gray-800 mb-4">Detalhes do Anúncio</h1>
-      <h2 className="text-3xl font-semibold text-center text-gray-700">{item.name}</h2>
-      <h3 className="text-xl text-center text-gray-600">{item.city}</h3>
+      <h1 className="text-3xl font-semibold text-center text-gray-700">{item.name}</h1>
+      <h2 className="text-xl text-center text-gray-600">{item.city}</h2>
 
       <img
         src={item.img}
@@ -174,13 +172,14 @@ const Detail = () => {
       )}
 
       {/* Localização */}
-      <div className="bg-white p-4 rounded-lg shadow-md mb-4">
+      <div className="bg-white p-4 rounded-lg shadow-md mb-4 z-10">
         <h3 className="text-lg font-semibold">Localização</h3>
         {location ? (
           <MapContainer
             center={[location.latitude, location.longitude]}
-            zoom={50}
-            style={{ height: '400px', width: '100%' }}
+            zoom={20}
+            className="h-96 w-full"
+            style={{ zIndex: 1 }}
           >
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

@@ -1,9 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useState } from 'react';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import * as yup from 'yup';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useForm } from 'react-hook-form';
 import { strongPassword } from '../utils/loginValidation';
+import { useNavigate } from 'react-router-dom';
 
 const schema = yup
   .object()
@@ -19,6 +20,7 @@ const schema = yup
 
 const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -34,7 +36,7 @@ const Login = () => {
 
   const sendDataForms = (data) => {
     console.log('Dados do Formulário:', data);
-    alert(`Email: ${data.email}\nSenha: ${data.password}`);
+    navigate('/profile');
   };
 
   return (

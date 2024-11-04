@@ -8,6 +8,7 @@ import Register from '@pages/Register';
 import Home from '@pages/Home';
 import Services from '@pages/services';
 import DetailServices from '../pages/DetailServices';
+import CustomerDashboard from '../pages/Profile';
 
 export const Router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ export const Router = createBrowserRouter([
       {
         path: '/detalheservico/:id',
         element: <DetailServices />,
+      },
+      {
+        path: '/profile',
+        element: <CustomerDashboard />,
       },
       {
         path: '*',

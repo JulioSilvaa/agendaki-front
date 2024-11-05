@@ -21,13 +21,13 @@ const ShowImages = ({ places, services }) => {
                 >
                   <div className="w-full max-w-[300px] h-[200px] overflow-hidden">
                     <img
-                      src={service.img}
-                      alt={service.name}
+                      src={service.serviceData.album[0]}
+                      alt={service.serviceData.name}
                       className="w-full h-full object-cover"
                     />
                   </div>
                   <div className="text-center text-zinc-800 font-semibold">
-                    <h2>{service.name}</h2>
+                    <h2>{service.serviceData.name}</h2>
                   </div>
                 </div>
               ))
@@ -38,11 +38,11 @@ const ShowImages = ({ places, services }) => {
                   className="flex w-full flex-col items-center cursor-pointer transition-transform transform shadow-sm rounded-md hover:scale-105 hover:shadow-lg"
                 >
                   <div className="w-full max-w-[300px] h-[200px] rounded-md overflow-hidden">
-                    <img src={place.img} alt={place.city} className="w-full h-full object-cover" />
+                    <img src={place.propertyData.album[0]} alt={place.propertyData.address.city} className="w-full h-full object-cover" />
                   </div>
                   <div className="text-center text-zinc-800 font-semibold">
-                    <h2>{place.name}</h2>
-                    <h3>{place.city}</h3>
+                    <h2>{place.propertyData.name}</h2>
+                    <h3>{place.propertyData.address.city}</h3>
                   </div>
                 </div>
               ))}
@@ -60,7 +60,7 @@ const ShowImages = ({ places, services }) => {
                 key={id}
                 className="w-full sm:max-w-[200px] md:max-w-[180px] h-[100px] flex flex-col items-center justify-center cursor-pointer overflow-hidden transition-transform transform hover:scale-105 hover:shadow-lg"
               >
-                <img src={service.img} alt={service.name} className="w-full h-full object-cover" />
+                <img src={service.serviceData.album[0]} alt={service.serviceData.name} className="w-full h-full object-cover" />
               </div>
             ))}
           </div>

@@ -29,6 +29,74 @@
       "advertiser": {
         "name": "Fernanda Lima",
         "img": "https://picsum.photos/100/100.webp?random=1",
+        "listingDate": "2024-06-01",
+        "phone":"13991063282",
+        "whatsApp":"234234342",
+        "facebook":"@/usario/facebook",
+        "instagram": "@/usuário/instagram"
+      }
+    },
+    {
+      "id": "2",
+      "propertyData": {
+        "name": "Cachoeira das Águas",
+        "description": "Uma impressionante cachoeira rodeada de verde, perfeita para um dia de aventuras.",
+            "address": {
+            "city": "São Carlos",
+            "street": "Rua Manoel Gomes, 57",
+            "zipcode": "13563-510",
+            "neighborhood": "Jardim São Carlos 5",
+            "state": "SP"
+         },
+        "amenities": [
+          "Trilhas",
+          "Cafeteria",
+          "Área para piquenique"
+        ],
+        "album": [
+          "https://picsum.photos/300/250.webp?random=1",
+          "https://picsum.photos/300/250.webp?random=2",
+          "https://picsum.photos/300/250.webp?random=3",
+          "https://picsum.photos/300/250.webp?random=4",
+          "https://picsum.photos/300/250.webp?random=5",
+          "https://picsum.photos/300/250.webp?random=6"
+        ]
+      },
+      "advertiser": {
+        "name": "Fernanda Lima",
+        "img": "https://picsum.photos/100/100.webp?random=1",
+        "listingDate": "2024-06-01"
+      }
+    },
+    {
+      "id": "3",
+      "propertyData": {
+        "name": "Cachoeira das Águas",
+        "description": "Uma impressionante cachoeira rodeada de verde, perfeita para um dia de aventuras.",
+            "address": {
+            "city": "São Carlos",
+            "street": "Rua Manoel Gomes, 57",
+            "zipcode": "13563-510",
+            "neighborhood": "Jardim São Carlos 5",
+            "state": "SP"
+         },
+        "amenities": [
+          "Trilhas",
+          "Cafeteria",
+          "Área para piquenique"
+        ],
+        "album": [
+          "https://picsum.photos/300/250.webp?random=1",
+          "https://picsum.photos/300/250.webp?random=2",
+          "https://picsum.photos/300/250.webp?random=3",
+          "https://picsum.photos/300/250.webp?random=4",
+          "https://picsum.photos/300/250.webp?random=5",
+          "https://picsum.photos/300/250.webp?random=6"
+        ]
+      },
+      "advertiser": {
+        "name": "Fernanda Lima",
+        "img": "https://picsum.photos/100/100.webp?random=1",
         "listingDate": "2024-06-01"
       }
     }

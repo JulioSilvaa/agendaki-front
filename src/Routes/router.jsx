@@ -8,7 +8,10 @@ import Register from '@pages/Register';
 import Home from '@pages/Home';
 import Services from '@pages/services';
 import DetailServices from '../pages/DetailServices';
-import CustomerDashboard from '../pages/Profile';
+
+import Edite from '../pages/Edite';
+import Profile from '../pages/Profile';
+import CustomerDashboard from '../pages/Edite';
 
 export const Router = createBrowserRouter([
   {
@@ -42,6 +45,10 @@ export const Router = createBrowserRouter([
       },
       {
         path: '/profile',
+        element: <Profile />,
+      },
+      {
+        path: '/dashboard/:id',
         element: <CustomerDashboard />,
       },
       {

@@ -1,8 +1,8 @@
-import React, {  useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useQuery } from '@tanstack/react-query';
-import  cep from 'cep-promise'
+import cep from 'cep-promise';
 import Modal from '../components/modal/Modal';
 
 const Detail = () => {
@@ -11,43 +11,43 @@ const Detail = () => {
   const [location, setLocation] = useState(null);
   const { id } = useParams();
 
+  const fetchPlacesById = async () => {
+    const response = await fetch(`http://localhost:3000/places/${id}`);
+    if (!response.ok) {
+      throw new Error('Erro ao buscar os lugares');
+    }
+    return response.json();
+  };
+
   const { data, isLoading, error } = useQuery({
-    queryKey: ['property', id], 
-    queryFn: async () => {
-      const response = await fetch(`http://localhost:3000/places/${id}`);
-      if (!response.ok) {
-        throw new Error('Erro ao buscar os lugares');
-      }
-      return response.json();
-    },
-    onSuccess: (data) => {
-      
-    },
+    queryKey: ['placeById', id],
+    queryFn: fetchPlacesById,
   });
 
   useEffect(() => {
-    fetchLocation(data?.propertyData?.address?.zipcode);
-  },[id])
+    if (data?.propertyData?.address?.zipcode) {
+      fetchLocation(data.propertyData.address.zipcode);
+    }
+  }, [data]); // Execute a cada mudança nos dados
 
-  
   const fetchLocation = async (cepCode) => {
     try {
       const cepData = await cep(cepCode);
       const coordinates = await getCoordinates(cepData);
-      setLocation(coordinates);
+      setLocation(coordinates); // Atualiza a localização
     } catch (error) {
       console.error('Erro ao buscar o endereço:', error);
-      setLocation(null);
+      setLocation(null); // Em caso de erro, zera a localização
     }
   };
- 
-  const getCoordinates = async ({ street, neighborhood, city, state }  ) => {
+
+  const getCoordinates = async ({ street, neighborhood, city, state }) => {
     const address = `${street}, ${neighborhood}, ${city}, ${state}, Brazil`;
     try {
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
-          address
-        )}&format=json&limit=1`
+          address,
+        )}&format=json&limit=1`,
       );
       const data = await response.json();
       if (data.length > 0) {
@@ -72,11 +72,14 @@ const Detail = () => {
   };
 
   const nextImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % item.album.length);
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % data.propertyData.album.length);
   };
 
   const prevImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + item.album.length) % item.album.length);
+    setCurrentImageIndex(
+      (prevIndex) =>
+        (prevIndex - 1 + data.propertyData.album.length) % data.propertyData.album.length,
+    );
   };
 
   if (isLoading) return <div>Carregando...</div>;
@@ -98,7 +101,7 @@ const Detail = () => {
         <img src={data?.advertiser?.img} alt="Anunciante" className="rounded-full mr-4" />
         <div>
           <h3 className="text-lg font-semibold">Anunciante</h3>
-          <p>{data?.propertyData?.advertiser?.name}</p>
+          <p>{data?.advertiser?.name}</p>
           <p className="text-sm text-gray-600">Anunciante desde: {data?.advertiser?.listingDate}</p>
         </div>
       </div>
@@ -161,7 +164,7 @@ const Detail = () => {
       <div className="bg-white p-4 rounded-lg shadow-md mb-4">
         <h3 className="text-lg font-semibold">Fotos do Álbum</h3>
         <div className="flex justify-center flex-wrap">
-          {data?.property?.album?.map((imgUrl, index) => (
+          {data?.propertyData?.album?.map((imgUrl, index) => (
             <img
               onClick={() => openModal(index)}
               key={index}
@@ -177,7 +180,7 @@ const Detail = () => {
       {modalIsVisible && (
         <Modal
           onclose={closeModal}
-          currentImage={item.album[currentImageIndex]}
+          currentImage={data.propertyData.album[currentImageIndex]}
           nextImage={nextImage}
           prevImage={prevImage}
         />

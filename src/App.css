@@ -11,3 +11,30 @@
 	background-color: #60a5fa;
 	cursor: pointer;
 }
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+
+.content {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+
+.footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  margin-top: auto; 
+}

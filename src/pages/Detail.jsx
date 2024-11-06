@@ -1,8 +1,8 @@
-import React, {  useState } from 'react';
+import React, {  useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useQuery } from '@tanstack/react-query';
-import * as cep from 'cep-promise'
+import  cep from 'cep-promise'
 import Modal from '../components/modal/Modal';
 
 const Detail = () => {
@@ -21,24 +21,27 @@ const Detail = () => {
       return response.json();
     },
     onSuccess: (data) => {
-      fetchLocation(data?.propertyData?.address?.zipcode)
       
     },
   });
 
+  useEffect(() => {
+    fetchLocation(data?.propertyData?.address?.zipcode);
+  },[id])
+
+  
   const fetchLocation = async (cepCode) => {
     try {
       const cepData = await cep(cepCode);
       const coordinates = await getCoordinates(cepData);
-      console.log("CEPDATA", coordinates);
       setLocation(coordinates);
     } catch (error) {
       console.error('Erro ao buscar o endereço:', error);
       setLocation(null);
     }
   };
-
-  const getCoordinates = async ({ street, neighborhood, city, state }) => {
+ 
+  const getCoordinates = async ({ street, neighborhood, city, state }  ) => {
     const address = `${street}, ${neighborhood}, ${city}, ${state}, Brazil`;
     try {
       const response = await fetch(

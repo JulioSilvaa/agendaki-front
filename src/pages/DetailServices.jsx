@@ -1,24 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 
-import { serviceProviders } from '../dbServices';
 import { useParams } from 'react-router-dom';
 import Modal from '../components/modal/Modal';
+import { useQuery } from '@tanstack/react-query';
 
 const DetailServices = () => {
-  const [item, setItem] = useState({});
   const [modalIsVisible, setModalIsVisible] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { id } = useParams();
 
-  useEffect(() => {
-    const serviceDetails = serviceProviders.find((service) => service.id.toString() === id);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['servibyid', id], 
+    queryFn: async () => {
+      const response = await fetch(`http://localhost:3000/places/${id}`);
+      if (!response.ok) {
+        throw new Error('Erro ao buscar os lugares');
+      }
+      return response.json();
+    },
+  });
 
-    if (serviceDetails) {
-      setItem(serviceDetails);
-    } else {
-      console.log('Detalhes não encontrados para o ID:', id);
-    }
-  }, [id]);
+  if(isLoading){
+    return <h1>Carregando...</h1>
+  }
 
   const openModal = (index) => {
     setCurrentImageIndex(index);
@@ -40,49 +44,49 @@ const DetailServices = () => {
   return (
     <div className="container mx-auto p-6 bg-gray-50 rounded-lg shadow-lg">
       <img
-        src={item.img}
-        alt={`${item.name} em ${item.city}`}
+        src={data?.propertyData?.album[0]}
+        alt={`${data?.propertyData?.name} em ${data?.propertyData?.address?.city}`}
         className="w-full h-96 object-cover rounded-lg my-4"
       />
-      <h1 className="text-3xl mt-10 font-semibold text-center text-gray-700">{item.name}</h1>
+      <h1 className="text-3xl mt-10 font-semibold text-center text-gray-700">{data?.propertyData?.name}</h1>
       {/* Informações do Anunciante */}
       <div className="bg-white p-4 rounded-lg shadow-md mb-4 flex items-center">
-        <img src={item.advertiser?.img} alt="Anunciante" className="rounded-full mr-4" />
+        <img src={data?.advertiser?.img} alt="Anunciante" className="rounded-full mr-4" />
         <div>
           <h3 className="text-lg font-semibold">Anunciante</h3>
-          <p>{item.advertiser?.name}</p>
-          <p className="text-sm text-gray-600">Anunciante desde: {item.advertiser?.listingDate}</p>
+          <p>{data?.advertiser?.name}</p>
+          <p className="text-sm text-gray-600">Anunciante desde: {data?.advertiser?.listingDate}</p>
         </div>
       </div>
       {/* Contatos */}
       <div className="bg-white p-4 rounded-lg shadow-md mb-4">
         <h3 className="text-lg font-semibold">Contatos</h3>
-        <p>Telefone: {item.advertiser?.contactOptions?.phone}</p>
-        <p>WhatsApp: {item.advertiser?.contactOptions?.whatsapp}</p>
+        <p>Telefone: {data.advertiser?.phone}</p>
+        <p>WhatsApp: {data.advertiser?.whatsApp}</p>
         <div>
           <h4 className="font-medium mt-4">Redes Sociais</h4>
-          <p>Instagram: {item.advertiser?.socialMedia?.instagram}</p>
-          <p>Facebook: {item.advertiser?.socialMedia?.facebook}</p>
+          <p>Instagram: {data.advertiser?.instagram}</p>
+          <p>Facebook: {data.advertiser?.facebook}</p>
         </div>
       </div>
       {/* Endereço */}
       <div className="bg-white p-4 rounded-lg shadow-md mb-4">
         <h3 className="text-lg font-semibold">Endereço</h3>
-        <p>Cidade: {item.city}</p>
+        <p>Cidade: {data?.propertyData?.address?.city}</p>
         <p>
-          Endereço: {item.address} - {item.neighborhood}
+          Endereço: {data?.propertyData?.address?.city} - {data?.propertyData?.address?.neighborhood}
         </p>
       </div>
       {/* Descrição */}
       <div className="bg-white p-4 rounded-lg shadow-md mb-4">
         <h3 className="text-lg font-semibold">Descrição</h3>
-        <p>{item.description || 'Descrição não disponível.'}</p>
+        <p>{data?.propertyData?.description || 'Descrição não disponível.'}</p>
       </div>
       {/* Fotos do Álbum */}
       <div className="bg-white p-4 rounded-lg shadow-md mb-4">
         <h3 className="text-lg font-semibold">Fotos do Álbum</h3>
         <div className="flex justify-center flex-wrap">
-          {item.album?.map((imgUrl, index) => (
+          {data?.propertyData?.album?.map((imgUrl, index) => (
             <img
               onClick={() => openModal(index)}
               key={index}
